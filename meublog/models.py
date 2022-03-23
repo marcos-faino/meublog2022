@@ -32,10 +32,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.titulo
-
+    """
     def get_absolute_url(self):
         return reverse('meublog:detalhe',
                        args=[self.publicado.year,
                              self.publicado.month,
                              self.publicado.day-1,
                              self.slug])
+    """

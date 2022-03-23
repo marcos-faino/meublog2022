@@ -6,7 +6,7 @@
     <h1>Meu Blog</h1>
     {% for p in posts %}
         <h2>
-            <a href="{{ p.get_absolute_url }}">{{ p.titulo }}</a>
+            <a href="{% url 'meublog:detalhe' p.publicado.year p.publicado.month p.publicado.day p.slug %}">{{ p.titulo }}</a>
         </h2>
         <p class="date">
             Publicado em {{ p.publicado }} por {{ p.autor }}
@@ -15,5 +15,5 @@
             {{ p.corpo|truncatewords:15|linebreaks }}
         </p>
     {% endfor %}
-    {% include "paginacao.html" with page=posts %}
+    {% include "paginacao.html" with page=page_obj %}
 {%endblock%}
