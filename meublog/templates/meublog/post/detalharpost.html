@@ -15,6 +15,15 @@
     <h4>
         <a href="{% url 'meublog:enviarpost' post.id %}">
             Enviar este post...
+        </a> &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'meublog:comentar_post' post.id %}">
+            Comentar este post...
         </a>
     </h4>
+    <h2>Comentários</h2>
+    {% for c in coments %}
+        <p>Comentário de {{ c.nome }}<br>
+            <b>{{ c.corpo }}</b>
+        </p>
+    {% endfor %}
 {% endblock %}

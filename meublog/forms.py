@@ -1,6 +1,8 @@
 from django import forms
 from django.core.mail import EmailMessage
 
+from meublog.models import Comentario
+
 
 class EmailForm(forms.Form):
     nome = forms.CharField(max_length=100)
@@ -25,3 +27,17 @@ class EmailForm(forms.Form):
             headers={'Reply-To': email}
         )
         mail.send()
+
+class ComentarioModelForm(forms.ModelForm):
+    class Meta:
+        model = Comentario
+        fields = ['nome', 'email', 'corpo']
+
+    def salvarComentario(self, post):
+        coment = self.save(commit=False)
+        coment.post = post
+        coment.nome = self.cleaned_data['nome']
+        coment.email = self.cleaned_data['email']
+        coment.corpo = self.cleaned_data['corpo']
+        return coment.save()
+

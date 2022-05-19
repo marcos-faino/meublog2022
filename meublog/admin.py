@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comentario
 
 # admin.site.register(Post)
 
@@ -12,3 +12,11 @@ class PostAdmin(admin.ModelAdmin):
     raw_id_fields = ('autor',)
     date_hierarchy = 'publicado'
     ordering = ('status', '-publicado')
+
+
+@admin.register(Comentario)
+class ComentarioAdmin(admin.ModelAdmin):
+    list_display = ('post', 'nome', 'email', 'criado', 'ativo')
+    ordering = ('post', 'ativo', 'criado')
+    list_filter = ('post', 'ativo')
+

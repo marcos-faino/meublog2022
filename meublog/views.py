@@ -1,9 +1,10 @@
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, CreateView
 
-from meublog.forms import EmailForm
-from meublog.models import Post
+from meublog.forms import EmailForm, ComentarioModelForm
+from meublog.models import Post, Comentario
 
 
 class FormContatoView(FormView):
@@ -45,32 +46,44 @@ class ListarPostsView(ListView):
     template_name = "meublog/post/listarposts.html"
 
 
-"""
-def listar_posts(request):
-    lista_objetos = Post.publicados.all()
-    paginacao = Paginator(lista_objetos, 2) # dois posts por página
-    page = request.GET.get('page')
-    try:
-        posts = paginacao.page(page)
-    except PageNotAnInteger:
-        posts = paginacao.page(1)
-    except EmptyPage:
-        posts = paginacao.page(paginacao.num_pages)
-    return render(request, 'meublog/post/listarposts.html',
-                  {'page': page, 'posts': posts})
-
-"""
-
-
 class DetalharPostView(DetailView):
     template_name = "meublog/post/detalharpost.html"
     model = Post
 
+    def _get_coments(self, id_post):
+        try:
+            return Comentario.objects.filter(post_id=id_post,
+                                             ativo=True)
+        except Comentario.DoesNotExist:
+            raise Exception
 
-"""
-def detalhar_post(request, ano, mes, dia, slug):
-    post = get_object_or_404(Post, slug=slug, publicado__year=ano,
-                             publicado__month=mes, publicado__day=dia)
-    print(post)
-    return render(request, 'meublog/post/detalharpost.html', {'post': post})
-"""
+    def get_context_data(self, **kwargs):
+        context = super(DetalharPostView, self).get_context_data(**kwargs)
+        context['coments'] = self._get_coments(self.object.id)
+        return context
+
+
+class ComentarioCreateView(CreateView):
+    template_name = "meublog/post/comentarios.html"
+    form_class = ComentarioModelForm
+
+    def _get_post(self, id_post):
+        try:
+            post = Post.publicados.get(pk=id_post)
+            return post
+        except Post.DoesNotExist:
+            raise Exception
+
+    def get_context_data(self, **kwargs):
+        context = super(ComentarioCreateView, self).get_context_data(**kwargs)
+        context['post'] = self._get_post(self.kwargs['pk'])
+        return context
+
+    def form_valid(self, form, **kwargs):
+        post = self._get_post(self.kwargs['pk'])
+        form.salvarComentario(post)
+        return redirect('meublog:detalhe',
+                        post.criado.year,
+                        post.criado.month,
+                        post.criado.day,
+                        post.slug)

@@ -10,4 +10,7 @@ urlpatterns = [
     path('enviarpost/<int:pk>/',
          views.FormContatoView.as_view(),
          name='enviarpost'),
+    path('comentar/<int:pk>/',
+         views.ComentarioCreateView.as_view(),
+         name='comentar_post'),
 ]
