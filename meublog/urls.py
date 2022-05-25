@@ -13,4 +13,8 @@ urlpatterns = [
     path('comentar/<int:pk>/',
          views.ComentarioCreateView.as_view(),
          name='comentar_post'),
+    path('cadastrousuario/',
+         views.CadUsuarioView.as_view(),
+         name="cadastrouser"),
+
 ]

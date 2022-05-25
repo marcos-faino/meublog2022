@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView
 
-from meublog.forms import EmailForm, ComentarioModelForm
+from meublog.forms import EmailForm, ComentarioModelForm, CadUsuarioForm
 from meublog.models import Post, Comentario
 
 
@@ -87,3 +87,19 @@ class ComentarioCreateView(CreateView):
                         post.criado.month,
                         post.criado.day,
                         post.slug)
+
+
+class CadUsuarioView(CreateView):
+    template_name = 'meublog/usuarios/cadusuario.html'
+    form_class = CadUsuarioForm #UserCreationForm
+    success_url = reverse_lazy('meublog:loginuser')
+
+    def form_valid(self, form, **kwargs):
+        form.cleaned_data
+        form.save()
+        messages.success(self.request, "Usuário cadastrado")
+        return super(CadUsuarioView, self).form_valid(form, **kwargs)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Não foi possível cadastrar")
+        return super(CadUsuarioView, self).form_invalid(form)
