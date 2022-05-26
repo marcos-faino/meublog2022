@@ -1,4 +1,9 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView
@@ -103,3 +108,29 @@ class CadUsuarioView(CreateView):
     def form_invalid(self, form):
         messages.error(self.request, "Não foi possível cadastrar")
         return super(CadUsuarioView, self).form_invalid(form)
+
+
+class LoginUsuarioView(FormView):
+    template_name = 'meublog/usuarios/login.html'
+    model = User
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('meublog:listar_posts')
+
+    def form_valid(self, form):
+        nome = form.cleaned_data['username']
+        senha = form.cleaned_data['password']
+        usuario = authenticate(self.request,
+                               username=nome,
+                               password=senha)
+        if usuario is not None:
+            login(self.request, usuario)
+            return redirect('meublog:listar_posts')
+        messages.error(self.request,
+                       f"Usuário não existe")
+        return redirect('meublog:loginuser')
+
+class LogoutUsuarioView(LoginRequiredMixin, LogoutView):
+
+    def get(self, request):
+        logout(request)
+        return redirect('meublog:listar_posts')

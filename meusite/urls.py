@@ -20,3 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('meublog.urls', namespace='meublog'))
 ]
+
+admin.site.site_header = "Meu Blog"
+admin.site.site_title = "Meu Blog - Ifro"
+admin.site.index_title = "Gerenciar Meu Blog"

@@ -5,9 +5,18 @@
 {% endblock %}
 
 {% block conteudo %}
+{% if user.is_authenticated %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Salvar">
     </form>
+{% else %}
+    <h2 class="text-danger">Disponível apenas para
+        usuários autenticados</h2>
+    <a class="btn btn-primary"
+       href="{% url 'meublog:listar_posts' %}">
+        Voltar
+    </a>
+{% endif %}
 {% endblock %}

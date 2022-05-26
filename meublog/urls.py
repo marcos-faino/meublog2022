@@ -16,5 +16,8 @@ urlpatterns = [
     path('cadastrousuario/',
          views.CadUsuarioView.as_view(),
          name="cadastrouser"),
-
+    path('login/', views.LoginUsuarioView.as_view(),
+         name='loginuser'),
+    path('logout/', views.LogoutUsuarioView.as_view(),
+         name='logoutuser'),
 ]

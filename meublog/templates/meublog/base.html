@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title> {% block titulo %}{% endblock %} </title>
-    <link href="{% static 'css/meublog.css' %}" rel="stylesheet">
+    <link href="{% static 'meublog.css' %}" rel="stylesheet">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
@@ -22,14 +22,14 @@
                 Cadastrar
                 </a>
             </p>
-            <p><a href="#"
+            <p><a href="{% url 'meublog:loginuser' %}"
                   class="btn btn-primary">
                 Logar
                 </a>
             </p>
         {% else %}
             <p>Olá {{ user.username }}</p>
-            <p><a href="#"
+            <p><a href="{% url 'meublog:logoutuser' %}"
                   class="btn btn-danger">Sair</a>
             </p>
         {% endif %}
